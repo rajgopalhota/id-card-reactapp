@@ -25,6 +25,16 @@ body{
     background:radial-gradient(rgba(255, 143, 15, 0.815),rgba(255, 70, 57, 0.779)) no-repeat center center fixed;
     font-family: 'Poppins', sans-serif;
 }
+.heading{
+    text-align: center;
+}
+.heading h1{
+    text-transform: uppercase;
+    font-size: 102px;
+    font-weight: bolder;
+    mix-blend-mode: overlay;
+    text-shadow: 0 0 8px rgb(255, 194, 82);
+}
 
 .flip-card {
     position: absolute;

@@ -6,6 +6,7 @@ import Barcode from './Img/Barcode.jpg';
 export default function Id() {
   return (
     <div>
+      <div className="heading"><h1>KL University ID Card</h1></div>
         <div className="flip-card">
           <div className="flip-card-inner">
             <div className="flip-card-front">
@@ -68,7 +69,7 @@ export default function Id() {
                   </h4>
                 </div>
                 <div className="barcode">
-                  <img src={Barcode} />
+                  <img src={Barcode} alt=''/>
                 </div>
               </div>
             </div>
