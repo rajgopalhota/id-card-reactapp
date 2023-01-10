@@ -65,6 +65,7 @@
     color: aliceblue;
   }
   .active {
+    transition: all ease-in-out 1s;
     color: black;
     text-shadow: 0 0 6px rgb(255, 255, 255);
   }

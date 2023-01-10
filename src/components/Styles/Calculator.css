@@ -43,6 +43,8 @@
   grid-template-areas: "keys-function keys-function keys-function keys-operators" "keys-numbers keys-numbers keys-numbers keys-operators" "keys-numbers keys-numbers keys-numbers keys-operators" "keys-numbers keys-numbers keys-numbers keys-operators" "keys-numbers keys-numbers keys-numbers keys-operators";
 }
 .calculator-input {
+  overflow-x: hidden;
+  overflow-y: hidden;
   border-radius: 40px;
   box-shadow: 0 0 8px black;
   border-bottom: 3px solid aliceblue;
