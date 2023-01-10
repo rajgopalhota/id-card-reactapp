@@ -1,22 +1,56 @@
-.container {
-    background-color: #dfe9f5;
-    min-height: 100vh;
-    min-width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .main1 {
-    border: 0px;
-    box-shadow: 0px 0px 3px 0.5px #c4e0e5;
-    border-radius: 10px;
-    max-width: 400px;
-  }
-  
-  @media (max-width: 600px) {
-    .main1 {
-      width: 100%;
-      height: 100%;
-    }
-  }
+.calculator {
+  width: 20rem;
+  height: 30rem;
+  background: linear-gradient(rgb(56, 189, 255),orange);
+  display: grid;
+  padding: 1%;
+  position: absolute;
+  top: 18%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  border: 2px solid aliceblue;
+  border-radius: 12px;
+  box-shadow: 0 0 18px rgb(255, 255, 255);
+  animation: animate 5s linear infinite;
+}
+
+.keys-numbers {
+  grid-area: keys-numbers;
+  direction: rtl;
+}
+
+.keys-numbers .key-zero {
+  text-align: center;
+  width: 9.1rem;
+  text-align: left;
+  padding-left: 15%;
+}
+.keys-operators {
+  grid-area: keys-operators;
+}
+.keys-function {
+  grid-area: keys-function;
+}
+.calculator-keypad {
+  padding-top: 0.3rem;
+  text-align: center;
+  background-color: transparent;
+  display: grid;
+  grid-template-columns: repeat(4, 5rem);
+  grid-template-rows: repeat(5, 5rem);
+  grid-template-areas: "keys-function keys-function keys-function keys-operators" "keys-numbers keys-numbers keys-numbers keys-operators" "keys-numbers keys-numbers keys-numbers keys-operators" "keys-numbers keys-numbers keys-numbers keys-operators" "keys-numbers keys-numbers keys-numbers keys-operators";
+}
+.calculator-input {
+  box-shadow: 0 0 8px black;
+  border-bottom: 2px solid aliceblue;
+  text-align: right;
+  padding-right: 10%;
+  font-weight: bold;
+  font-size: xx-large;
+}
+.result {
+  min-height: 3rem;
+  color: #666666;
+}

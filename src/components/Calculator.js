@@ -1,151 +1,123 @@
-import React, { useState } from "react";
-import Display from "./Display";
-import Buttons from "./Button";
-import "./Styles/Calculator.css";
-import { evaluate, round } from "mathjs";
+import React, { useState, useEffect } from "react";
+import CalculatorKey from './CalculatorKey'
+import './Styles/Calculator.css';
+export default function Calculator() {
+  const [prevValue, setPrevValue] = useState(null);
+  const [nextValue, setNextValue] = useState("0");
+  const [op, setOp] = useState(null);
 
-function Calculator() {
-  const [input, setInput] = useState("");
-  const [answer, setAnswer] = useState("");
+  useEffect(() => { }, [op, nextValue, prevValue]);
 
-  //input
-  const inputHandler = (event) => {
-    if (answer === "Invalid Input!!") return;
-    let val = event.target.innerText;
-
-    if (val === "x2") val = "^2";
-    else if (val === "x3") val = "^3";
-    else if (val === "3√") val = "^(1÷3)";
-    else if (val === "log") val = "log(";
-
-    let str = input + val;
-    if (str.length > 14) return;
-
-    if (answer !== "") {
-      setInput(answer + val);
-      setAnswer("");
-    } else setInput(str);
-    // setInput(str);
+  const CalculatorOperations = {
+    "/": (firstValue, secondValue) => firstValue / secondValue,
+    "*": (firstValue, secondValue) => firstValue * secondValue,
+    "+": (firstValue, secondValue) => firstValue + secondValue,
+    "-": (firstValue, secondValue) => firstValue - secondValue,
+    "=": (firstValue, secondValue) => secondValue,
   };
 
-  //Clear screen
-  const clearInput = () => {
-    setInput("");
-    setAnswer("");
+  const performOperation = () => {
+    let temp = CalculatorOperations[op](
+      parseFloat(prevValue),
+      parseFloat(nextValue)
+    );
+    setOp(null);
+    setNextValue(String(temp));
+    setPrevValue(null);
   };
 
-  // check brackets are balanced or not
-  const checkBracketBalanced = (expr) => {
-    let stack = [];
-    for (let i = 0; i < expr.length; i++) {
-      let x = expr[i];
-      if (x === "(") {
-        stack.push(x);
-        continue;
-      }
+  const handleNum = (number) => {
+    setNextValue(nextValue === "0" ? String(number) : nextValue + number);
+  };
 
-      if (x === ")") {
-        if (stack.length === 0) return false;
-        else stack.pop();
-      }
+  const insertDot = () => {
+    if (!/\./.test(nextValue)) {
+      setNextValue(nextValue + ".");
     }
-    return stack.length === 0;
   };
-
-  // calculate final answer
-  const calculateAns = () => {
-    if (input === "") return;
-    let result = 0;
-    let finalexpression = input;
-    //  finalexpression = input.replaceAll("^", "**");  //for eval()
-    finalexpression = finalexpression.replaceAll("x", "*");
-    finalexpression = finalexpression.replaceAll("÷", "/");
-
-    // evaluate square root
-    let noSqrt = input.match(/√[0-9]+/gi);
-
-    if (noSqrt !== null) {
-      let evalSqrt = input;
-      for (let i = 0; i < noSqrt.length; i++) {
-        evalSqrt = evalSqrt.replace(
-          noSqrt[i],
-          `sqrt(${noSqrt[i].substring(1)})`
-        );
-      }
-      finalexpression = evalSqrt;
+  const percentage = () => {
+    setNextValue(parseFloat(nextValue) / 100);
+    if (prevValue && nextValue === "") {
+      setPrevValue(parseFloat(prevValue) / 100);
     }
-
-    try {
-      // check brackets are balanced or not
-      if (!checkBracketBalanced(finalexpression)) {
-        const errorMessage = { message: "Brackets are not balanced!" };
-        throw errorMessage;
-      }
-      result = evaluate(finalexpression); //mathjs
-    } catch (error) {
-      result =
-        error.message === "Brackets are not balanced!"
-          ? "Brackets are not balanced!"
-          : "Invalid Input!!"; //error.message;
-    }
-    isNaN(result) ? setAnswer(result) : setAnswer(round(result, 3));
+  };
+  const changeSign = () => {
+    setNextValue(parseFloat(nextValue) * -1);
+  };
+  const clearData = () => {
+    setNextValue("0");
+    setPrevValue(0);
   };
 
-  // remove last character
-  const backspace = () => {
-    if (answer !== "") {
-      setInput(answer.toString().slice(0, -1));
-      setAnswer("");
-    } else setInput((prev) => prev.slice(0, -1));
-  };
-
-  // change prefix of expression
-  const changePlusMinus = () => {
-    //need to change for answer
-    if (answer === "Invalid Input!!") return;
-    else if (answer !== "") {
-      let ans = answer.toString();
-      if (ans.charAt(0) === "-") {
-        let plus = "+";
-        setInput(plus.concat(ans.slice(1, ans.length)));
-      } else if (ans.charAt(0) === "+") {
-        let minus = "-";
-        setInput(minus.concat(ans.slice(1, ans.length)));
-      } else {
-        let minus = "-";
-        setInput(minus.concat(ans));
+  const handleOperation = (value) => {
+    if (Number.isInteger(value)) {
+      handleNum(parseInt(value, 10));
+    } else if (value in CalculatorOperations) {
+      if (op === null) {
+        setOp(value);
+        setPrevValue(nextValue);
+        setNextValue("");
       }
-      setAnswer("");
-    } else {
-      if (input.charAt(0) === "-") {
-        let plus = "+";
-        setInput((prev) => plus.concat(prev.slice(1, prev.length)));
-      } else if (input.charAt(0) === "+") {
-        let minus = "-";
-        setInput((prev) => minus.concat(prev.slice(1, prev.length)));
-      } else {
-        let minus = "-";
-        setInput((prev) => minus.concat(prev));
+      if (op) {
+        setOp(value);
       }
+      if (prevValue && op && nextValue) {
+        performOperation();
+      }
+    } else if (value === "c") {
+      clearData();
+    } else if (value === "\xB1") {
+      changeSign();
+    } else if (value === ".") {
+      insertDot();
+    } else if (value === "%") {
+      percentage();
     }
   };
 
   return (
-    <>
-      <div className="container">
-        <div className="main1">
-          <Display input={input} setInput={setInput} answer={answer} />
-          <Buttons
-            inputHandler={inputHandler}
-            clearInput={clearInput}
-            backspace={backspace}
-            changePlusMinus={changePlusMinus}
-            calculateAns={calculateAns}
-          />
+    <div className="cal">
+      <h2>Fascinating Calculator</h2>
+      <div className="calculator">
+        <div className="calculator-input">
+          <div className="result">{nextValue} </div>
+        </div>
+        <div className="calculator-keypad">
+          <div className="keys-function">
+            <CalculatorKey keyValue={"c"} onClick={handleOperation} />
+            <CalculatorKey keyValue={"\xB1"} onClick={handleOperation} />
+            <CalculatorKey keyValue={"%"} onClick={handleOperation} />
+          </div>
+          <div className="keys-operators">
+            <CalculatorKey keyValue={"+"} onClick={handleOperation} />
+            <CalculatorKey keyValue={"-"} onClick={handleOperation} />
+            <CalculatorKey keyValue={"*"} onClick={handleOperation} />
+            <CalculatorKey keyValue={"/"} onClick={handleOperation} />
+            <CalculatorKey keyValue={"="} onClick={handleOperation} />
+          </div>
+          <div className="keys-numbers">
+            <CalculatorKey keyValue={9} onClick={handleOperation} />
+            <CalculatorKey keyValue={8} onClick={handleOperation} />
+            <CalculatorKey keyValue={7} onClick={handleOperation} />
+            <CalculatorKey keyValue={6} onClick={handleOperation} />
+            <CalculatorKey keyValue={5} onClick={handleOperation} />
+            <CalculatorKey keyValue={4} onClick={handleOperation} />
+            <CalculatorKey keyValue={3} onClick={handleOperation} />
+            <CalculatorKey keyValue={2} onClick={handleOperation} />
+            <CalculatorKey keyValue={1} onClick={handleOperation} />
+            <CalculatorKey
+              className="key-dot"
+              keyValue={"."}
+              onClick={handleOperation}
+            />
+            <CalculatorKey
+              className="key-zero"
+              keyValue={0}
+              onClick={handleOperation}
+            />
+          </div>
         </div>
       </div>
-    </>
-  );
+    </div>
+  )
 }
-
-export default Calculator;
