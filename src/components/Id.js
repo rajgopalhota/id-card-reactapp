@@ -11,7 +11,7 @@ export default function Id() {
         <div className="flip-card">
           <div className="flip-card-inner">
             <div className="flip-card-front">
-              <div className="container">
+              <div className="containerrj">
                 <div className="pic">
                   <img src={Logo} alt="profile pic" />
                   <div className="main">

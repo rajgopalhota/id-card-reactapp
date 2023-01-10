@@ -47,7 +47,7 @@
     color: rgb(255, 255, 255);
     background-color: rgb(162, 56, 255);
   }
-.container{
+.containerrj{
     z-index: -10;
     background:url(./../Img/bg.png) no-repeat;
     background-size: cover;
