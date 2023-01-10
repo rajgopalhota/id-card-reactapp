@@ -1,4 +1,5 @@
 import React from "react";
+import './Styles/Id.css'
 import Logo from './Img/Home-img.png';
 import Klu from './Img/Logo.png';
 import Sign from './Img/Sign.png';
